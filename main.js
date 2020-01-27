@@ -79,8 +79,20 @@ function try_tau_prolog( cm, msg, e ) {
 				} else if( mode == MODE_DERIVATION ) {
 					reset = 1;
 				}
-				if( session == null )
+				if( session == null ) {
 					session = pl.create(parseInt(document.getElementById("limit").value));
+					session.streams.user_output = new pl.type.Stream({
+						put: function( text, _ ) {
+							new_message( text );
+							return true;
+						},
+						flush: function() {
+							return true;
+						} 
+					}, "write", "user_output", "text", false, "eof_code");
+					session.standard_output = session.streams["user_output"];
+					session.current_output = session.streams["user_output"];
+				}
 				session.limit = parseInt(document.getElementById("limit").value);
 				var q = session.query( raw_goal );
 				if( q !== true ) {
@@ -110,6 +122,16 @@ function escapeHtml(unsafe) {
 function new_block(last) {
 	document.getElementById( "output" ).innerHTML = "<div class=\"goal\"></div>" + document.getElementById( "output" ).innerHTML;
 	document.getElementById( "output" ).innerHTML = "<div class=\"last\">?- " + last + "</div>" + document.getElementById( "output" ).innerHTML;
+}
+
+function new_message(msg) {
+	msg = msg.replace(/\n/g, "<br />");
+	var elem = document.getElementsByClassName( "goal" )[0];
+	var inner = elem.innerHTML;
+	if( inner !== "" ) {
+		elem.innerHTML = "<div class=\"sep\"></div>" + inner;
+	}
+	elem.innerHTML = "<div class=\"answer\">" + msg + "</div>" + elem.innerHTML;
 }
 
 function try_answer( answer, format ) {
@@ -211,8 +233,20 @@ function set_theme( theme ) {
 function reconsult() {
 	document.getElementById("reconsult").value = "Reconsult program";
 	var raw_program = code.getValue();
-	if( session == null )
+	if( session == null ) {
 		session = pl.create(parseInt(document.getElementById("limit").value));
+		session.streams.user_output = new pl.type.Stream({
+			put: function( text, _ ) {
+				new_message( text );
+				return true;
+			},
+			flush: function() {
+				return true;
+			} 
+		}, "write", "user_output", "text", false, "eof_code");
+		session.standard_output = session.streams["user_output"];
+		session.current_output = session.streams["user_output"];
+	}
 	var c = session.consult( raw_program );
 	reset = 1;
 	new_block("consult");
