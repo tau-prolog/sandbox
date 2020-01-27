@@ -1,0 +1,9 @@
+mysql.php
+codemirror/*
+!codemirror/theme/
+!codemirror/mode/
+codemirror/theme/*
+!codemirror/theme/tau.css
+!codemirror/theme/tauout.css
+codemirror/mode/*
+!codemirror/mode/prolog
