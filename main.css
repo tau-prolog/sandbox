@@ -40,11 +40,22 @@ a:hover {
 	padding: 5px;
 }
 
+.write {
+	background-color: #f9e38d;
+	border: 1px solid #e0c96c;
+	display: none;
+	color: #413507;
+	font-size: 18px;
+	font-family: monospace;
+	margin-top: 5px;
+	padding: 10px;
+}
+
 .goal {
 	background-color: #e0e0e0;
 	margin: 10px;
 	margin-top: 20px;
-	padding: 10px;
+	padding: 5px 10px;
 }
 
 .last {

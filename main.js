@@ -120,27 +120,22 @@ function escapeHtml(unsafe) {
 }
 
 function new_block(last) {
-	document.getElementById( "output" ).innerHTML = "<div class=\"goal\"></div>" + document.getElementById( "output" ).innerHTML;
-	document.getElementById( "output" ).innerHTML = "<div class=\"last\">?- " + last + "</div>" + document.getElementById( "output" ).innerHTML;
+	var output = document.getElementById( "output" );
+	output.innerHTML = "<div class=\"last\">?- " + last + "</div><div class=\"goal\"><div class=\"write\"></div><div class=\"sep\"></div></div>" + output.innerHTML;
 }
 
 function new_message(msg) {
 	msg = msg.replace(/\n/g, "<br />");
-	var elem = document.getElementsByClassName( "goal" )[0];
-	var inner = elem.innerHTML;
-	if( inner !== "" ) {
-		elem.innerHTML = "<div class=\"sep\"></div>" + inner;
-	}
-	elem.innerHTML = "<div class=\"answer\">" + msg + "</div>" + elem.innerHTML;
+	var elem = document.getElementsByClassName( "write" )[0];
+	elem.style.display = "block";
+	elem.innerHTML += msg;
 }
 
 function try_answer( answer, format ) {
 	var elem = document.getElementsByClassName( "goal" )[0];
 	var inner = elem.innerHTML;
-	if( inner !== "" ) {
-		elem.innerHTML = "<div class=\"sep\"></div>" + inner;
-	}
-	elem.innerHTML = "<div class=\"answer\">" + (format ? answer : escapeHtml(pl.format_answer( answer, session, getWriteOptions() )) ) + "</div>" + elem.innerHTML;	
+	elem.innerHTML = "<div class=\"answer\">" + (format ? answer : escapeHtml(pl.format_answer( answer, session, getWriteOptions() )) ) + "</div>" + elem.innerHTML;
+	elem.innerHTML = "<div class=\"write\"></div><div class=\"sep\"></div>" + elem.innerHTML;	
 }
 
 function toggle(id) {
