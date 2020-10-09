@@ -49,6 +49,7 @@ a:hover {
 	font-family: monospace;
 	margin-top: 5px;
 	padding: 10px;
+	white-space: pre;
 }
 
 .goal {
@@ -98,7 +99,7 @@ a:hover {
 	position: absolute;
 	left: 20px;
 	top: 80px;
-	width: 400px;
+	width: 500px;
 	z-index: 9999;
 }
 
@@ -236,6 +237,7 @@ a:hover {
 
 #toolbar {
 	background-color: #442178;
+	color: #ffffff;
 }
 
 #toolbar li > * {

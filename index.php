@@ -6,6 +6,9 @@ $_time_random = filemtime("../code/random-latest.js");
 $_time_statistics = filemtime("../code/statistics-latest.js");
 $_time_dom = filemtime("../code/dom-latest.js");
 $_time_js = filemtime("../code/js-latest.js");
+$_time_os = filemtime("../code/os-latest.js");
+$_time_charsio = filemtime("../code/charsio-latest.js");
+$_time_format = filemtime("../code/format-latest.js");
 $_time_draw = filemtime("../utils/draw-derivation-trees/draw-derivation-trees.js");
 
 function genid() {
@@ -28,7 +31,7 @@ function genuniqid($link) {
 	return $id;
 }
 
-$program = ":-use_module(library(lists)).\n";
+$program = ":- use_module(library(lists)).\n";
 $title = "";
 $description = "Test your Prolog online with Tau Prolog code editor.";
 $date = "";
@@ -79,7 +82,10 @@ if( isset($_GET["id"]) ) {
 		<script type="text/javascript" src="/code/random-latest.js?update=<?php echo $_time_random; ?>"></script>
 		<script type="text/javascript" src="/code/statistics-latest.js?update=<?php echo $_time_statistics; ?>"></script>
 		<script type="text/javascript" src="/code/dom-latest.js?update=<?php echo $_time_dom; ?>"></script>
-		<script type="text/javascript" src="/code/js-latest.js?update=<?php echo $_js_statistics; ?>"></script>
+		<script type="text/javascript" src="/code/js-latest.js?update=<?php echo $_time_js; ?>"></script>
+		<script type="text/javascript" src="/code/os-latest.js?update=<?php echo $_time_os; ?>"></script>
+		<script type="text/javascript" src="/code/charsio-latest.js?update=<?php echo $_time_charsio; ?>"></script>
+		<script type="text/javascript" src="/code/format-latest.js?update=<?php echo $_time_format; ?>"></script>
 		<!-- Tau Prolog utils -->
 		<script type="text/javascript" src="/utils/draw-derivation-trees/draw-derivation-trees.js?update=<?php echo $_time_draw; ?>"></script>
 		<!-- Codemirror -->
@@ -106,11 +112,14 @@ if( isset($_GET["id"]) ) {
 		<div id="help" onClick="event.stopPropagation();" style="display:none;">
 			Look at <a href="http://tau-prolog.org/documentation" title="Tau Prolog: Documentation" target="_blank">built-in predicates and modules</a> supported by Tau Prolog.
 			<ul>
-				<li><a href="http://tau-prolog.org/documentation#lists"  title="Tau Prolog: Documentation # lists module" target="_blank">lists</a> <span title="Add to your program" onClick="add(':-use_module(library(lists)).');">:-use_module(library(lists)).</span></li>
-				<li><a href="http://tau-prolog.org/documentation#random"  title="Tau Prolog: Documentation # random module" target="_blank">random</a> <span title="Add to your program" onClick="add(':-use_module(library(random)).');">:-use_module(library(random)).</span></li>
-				<li><a href="http://tau-prolog.org/documentation#statistics"  title="Tau Prolog: Documentation # statistics module" target="_blank">statistics</a> <span title="Add to your program" onClick="add(':-use_module(library(statistics)).');">:-use_module(library(statistics)).</span></li>
-				<li><a href="http://tau-prolog.org/documentation#dom"  title="Tau Prolog: Documentation # dom module" target="_blank">dom</a> <span title="Add to your program" onClick="add(':-use_module(library(dom)).');">:-use_module(library(dom)).</span></li>
-				<li><a href="http://tau-prolog.org/documentation#js"  title="Tau Prolog: Documentation # js module" target="_blank">js</a> <span title="Add to your program" onClick="add(':-use_module(library(js)).');">:-use_module(library(js)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#lists"  title="Tau Prolog: Documentation # lists module" target="_blank">lists</a> <span title="Add to your program" onClick="add(':- use_module(library(lists)).');">:-use_module(library(lists)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#random"  title="Tau Prolog: Documentation # random module" target="_blank">random</a> <span title="Add to your program" onClick="add(':- use_module(library(random)).');">:-use_module(library(random)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#statistics"  title="Tau Prolog: Documentation # statistics module" target="_blank">statistics</a> <span title="Add to your program" onClick="add(':- use_module(library(statistics)).');">:-use_module(library(statistics)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#dom"  title="Tau Prolog: Documentation # dom module" target="_blank">dom</a> <span title="Add to your program" onClick="add(':- use_module(library(dom)).');">:-use_module(library(dom)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#js"  title="Tau Prolog: Documentation # js module" target="_blank">js</a> <span title="Add to your program" onClick="add(':- use_module(library(js)).');">:-use_module(library(js)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#os"  title="Tau Prolog: Documentation # os module" target="_blank">os</a> <span title="Add to your program" onClick="add(':- use_module(library(os)).');">:-use_module(library(os)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#charsio"  title="Tau Prolog: Documentation # charsio module" target="_blank">charsio</a> <span title="Add to your program" onClick="add(':- use_module(library(charsio)).');">:-use_module(library(charsio)).</span></li>
+				<li><a href="http://tau-prolog.org/documentation#format"  title="Tau Prolog: Documentation # format module" target="_blank">format</a> <span title="Add to your program" onClick="add(':- use_module(library(format)).');">:-use_module(library(format)).</span></li>
 			</ul>
 			<div class="help-bar"></div>
 			<p class="help-par">Latest updates</p>
@@ -121,6 +130,9 @@ if( isset($_GET["id"]) ) {
 				<li>statistics.js <?php echo "[" . $_time_statistics . "] " . date ("(d-m-Y H:i)", $_time_statistics); ?></li>
 				<li>dom.js <?php echo "[" . $_time_dom . "] " . date ("(d-m-Y H:i)", $_time_dom); ?></li>
 				<li>js.js <?php echo "[" . $_time_js . "] " . date ("(d-m-Y H:i)", $_time_js); ?></li>
+				<li>os.js <?php echo "[" . $_time_os . "] " . date ("(d-m-Y H:i)", $_time_os); ?></li>
+				<li>charsio.js <?php echo "[" . $_time_charsio . "] " . date ("(d-m-Y H:i)", $_time_charsio); ?></li>
+				<li>format.js <?php echo "[" . $_time_format . "] " . date ("(d-m-Y H:i)", $_time_format); ?></li>
 			</ul>
 		</div>
 <?php if (!isset($_GET["toolbar"]) || $_GET["toolbar"] != "hidden") { ?>

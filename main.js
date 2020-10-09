@@ -79,7 +79,7 @@ function try_tau_prolog( cm, msg, e ) {
 				} else if( mode == MODE_DERIVATION ) {
 					reset = 1;
 				}
-				if( session == null ) {
+				if( session === null ) {
 					session = pl.create(parseInt(document.getElementById("limit").value));
 					session.streams.user_output = new pl.type.Stream({
 						put: function( text, _ ) {
@@ -94,21 +94,29 @@ function try_tau_prolog( cm, msg, e ) {
 					session.current_output = session.streams["user_output"];
 				}
 				session.limit = parseInt(document.getElementById("limit").value);
-				var q = session.query( raw_goal );
-				if( q !== true ) {
-					try_answer( 'error parsing query: ' + q.args[0], true );
-					return;
+				session.query(raw_goal, {success: function(goal) {
+					try_answer("parsing query: " + goal.toString(getWriteOptions()) + " ok!", true);
+					if( mode == MODE_PROGRAM )
+						session.answer( try_answer );
+					else if( mode == MODE_DERIVATION ) {
+						var max_answers = parseInt(document.getElementById("max_answers").value);
+						session.draw(max_answers, "tau-canvas", styles, getWriteOptions());
+					}
+				}, error: function(err) {
+					try_answer("error parsing query:" + err.toString(getWriteOptions()), true);
+				}});
+			} else {
+				if( mode == MODE_PROGRAM )
+					session.answer( try_answer );
+				else if( mode == MODE_DERIVATION ) {
+					var max_answers = parseInt(document.getElementById("max_answers").value);
+					session.draw(max_answers, "tau-canvas", styles, getWriteOptions());
 				}
 			}
 		} catch( ex ) {
+			console.log(ex);
 			try_answer( 'javascript error: ' + ex.toString() + '<div class="report-github"><a href="https://github.com/jariazavalverde/tau-prolog/issues" target="_blank">Report error on GitHub</a></div>', true );
 			return;
-		}
-		if( mode == MODE_PROGRAM )
-			session.answer( try_answer );
-		else if( mode == MODE_DERIVATION ) {
-			var max_answers = parseInt(document.getElementById("max_answers").value);
-			session.draw(max_answers, "tau-canvas", styles, getWriteOptions());
 		}
 	}
 	try_program = raw_program;
@@ -133,7 +141,6 @@ function new_message(msg) {
 
 function try_answer( answer, format ) {
 	var elem = document.getElementsByClassName( "goal" )[0];
-	var inner = elem.innerHTML;
 	elem.innerHTML = "<div class=\"answer\">" + (format ? answer : escapeHtml(pl.format_answer( answer, session, getWriteOptions() )) ) + "</div>" + elem.innerHTML;
 	elem.innerHTML = "<div class=\"write\"></div><div class=\"sep\"></div>" + elem.innerHTML;	
 }
@@ -242,19 +249,20 @@ function reconsult() {
 		session.standard_output = session.streams["user_output"];
 		session.current_output = session.streams["user_output"];
 	}
-	var c = session.consult( raw_program );
-	reset = 1;
 	new_block("consult");
-	if( c !== true && c.args )
-		try_answer( 'error parsing program: ' + c.args[0], true );
-	else if( c === false )
-		try_answer( 'parsing program: fail!', true );
-	else
-		try_answer( 'parsing program: ok!', true );
-	var warnings = session.get_warnings();
-	for( var i = warnings.length-1; i >= 0; i-- )
-		try_answer( 'warning parsing program: ' + warnings[i].toString( getWriteOptions() ), true );
-	update_transformation();
+	session.consult(raw_program, {
+		success: function() {
+			try_answer( 'parsing program: ok!', true );
+			reset = 1;
+			var warnings = session.get_warnings();
+			for( var i = warnings.length-1; i >= 0; i-- )
+				try_answer( 'warning parsing program: ' + warnings[i].toString(getWriteOptions()), true );
+			update_transformation();
+		},
+		error: function(err) {
+			try_answer( 'error parsing program: ' + err.args[0], true );
+		}
+	});
 }
 
 function update_transformation() {
