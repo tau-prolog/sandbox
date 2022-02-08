@@ -140,9 +140,16 @@ function new_message(msg) {
 }
 
 function try_answer( answer, format ) {
-	var elem = document.getElementsByClassName( "goal" )[0];
-	elem.innerHTML = "<div class=\"answer\">" + (format ? answer : escapeHtml(pl.format_answer( answer, session, getWriteOptions() )) ) + "</div>" + elem.innerHTML;
-	elem.innerHTML = "<div class=\"write\"></div><div class=\"sep\"></div>" + elem.innerHTML;	
+	var stop = document.getElementById("stop").checked;
+	if(answer === null && stop === false) {
+		setTimeout(function() {
+			session.answer(try_answer);
+		}, 0);
+	} else {
+		var elem = document.getElementsByClassName( "goal" )[0];
+		elem.innerHTML = "<div class=\"answer\">" + (format ? answer : escapeHtml(pl.format_answer( answer, session, getWriteOptions() )) ) + "</div>" + elem.innerHTML;
+		elem.innerHTML = "<div class=\"write\"></div><div class=\"sep\"></div>" + elem.innerHTML;
+	}	
 }
 
 function toggle(id) {
